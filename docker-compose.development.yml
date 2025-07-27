@@ -1,0 +1,80 @@
+# ===============================================
+# NIDS Autoencoder Project - Docker Compose Override
+# ===============================================
+# This file contains development-specific overrides
+# Copy to docker-compose.override.yml for local development
+
+version: '3.8'
+
+services:
+  nids-api:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - LOG_LEVEL=DEBUG
+      - API_RELOAD=true
+    volumes:
+      - .:/workspace:cached
+      - /workspace/.venv
+    ports:
+      - "8000:8000"
+      - "5678:5678"  # debugpy port
+    command: >
+      bash -c "
+        pip install debugpy &&
+        python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+  redis:
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-dev-data:/data
+
+  prometheus:
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus-dev.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+
+  # Development database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=nids_dev
+      - POSTGRES_USER=nids_user
+      - POSTGRES_PASSWORD=nids_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+
+  # Development tools
+  jupyter:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/workspace:cached
+    command: >
+      bash -c "
+        jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+      "
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+
+volumes:
+  redis-dev-data:
+  postgres-dev-data:

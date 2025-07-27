@@ -1,0 +1,16 @@
+# This directory contains model artifacts and outputs
+#
+# Purpose: Store trained models, checkpoints, and experiment artifacts
+# Contents:
+#   - Trained model files (.pkl, .pt, .h5)
+#   - Training checkpoints and snapshots
+#   - Experiment tracking artifacts
+#   - Model export formats (ONNX, TensorRT)
+#   - Model metadata and documentation
+#
+# Guidelines:
+#   - Use version numbers in artifact names
+#   - Include model metadata and performance metrics
+#   - Compress large model files when possible
+#   - Organize by experiment date or version
+#   - Document model performance and usage

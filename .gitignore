@@ -218,37 +218,37 @@ $RECYCLE.BIN/
 .nfs*
 
 # ============ NIDS Project Specific ============
-# Data files - exclude data but keep structure
-dataset/*.csv
-dataset/*.json
-dataset/*.parquet
-dataset/*.h5
-dataset/*.hdf5
-dataset/raw/*
-dataset/processed/*
-dataset/external/*
-data/
+# Data files - exclude large data but keep structure
+data/raw/*.csv
+data/raw/*.json
+data/raw/*.parquet
+data/raw/*.h5
+data/raw/*.hdf5
+data/processed/*
+data/external/*
+dataset/  # Legacy dataset directory
 # Keep directory structure and sample data
-!dataset/.gitkeep
-!dataset/*/.gitkeep
-!dataset/sample_data.csv
-!dataset/CIDDS-001-external-week3_1.csv
+!data/.gitkeep
+!data/*/.gitkeep
+!data/raw/sample_*.csv
+!data/raw/CIDDS-001-external-week3_1.csv
 
-# Model files - exclude models but keep structure
-models/*.pkl
-models/*.joblib
-models/*.h5
-models/*.pt
-models/*.pth
-models/*.onnx
-models/*.tflite
-models/checkpoints/*
-models/experiments/*
+# Model artifacts - exclude models but keep structure
+artifacts/models/*.pkl
+artifacts/models/*.joblib
+artifacts/models/*.h5
+artifacts/models/*.pt
+artifacts/models/*.pth
+artifacts/models/*.onnx
+artifacts/models/*.tflite
+artifacts/checkpoints/*
+artifacts/experiments/*
+models/  # Legacy models directory
 # Keep directory structure and documentation
-!models/.gitkeep
-!models/*/.gitkeep
-!models/README.md
-!models/production_autoencoder.pkl
+!artifacts/.gitkeep
+!artifacts/*/.gitkeep
+!artifacts/README.md
+!artifacts/models/production_autoencoder.pkl
 
 # Logs and monitoring - exclude logs but keep structure
 logs/*.log
@@ -261,6 +261,49 @@ logs/monitoring/*
 # Keep directory structure
 !logs/.gitkeep
 !logs/*/.gitkeep
+
+# Reports and analysis - exclude large reports but keep structure
+reports/*.pdf
+reports/*.html
+reports/data/*
+reports/models/*
+# Keep directory structure and key reports
+!reports/.gitkeep
+!reports/*/.gitkeep
+!reports/README.md
+
+# Benchmarks - exclude results but keep structure
+benchmarks/results/*
+benchmarks/data/*
+# Keep directory structure and tools
+!benchmarks/.gitkeep
+!benchmarks/*/.gitkeep
+!benchmarks/README.md
+
+# Tools and utilities - keep all tools
+# No exclusions for tools directory
+
+# Examples - keep all examples
+# No exclusions for examples directory
+
+# Environments - exclude generated environment files
+environments/conda/*.lock
+environments/docker/build/*
+environments/vagrant/.vagrant/
+# Keep directory structure and base configs
+!environments/.gitkeep
+!environments/*/.gitkeep
+
+# Assets - exclude large media files but keep structure
+assets/images/*.psd
+assets/images/*.ai
+assets/videos/*
+# Keep directory structure and optimized assets
+!assets/.gitkeep
+!assets/*/.gitkeep
+!assets/images/*.png
+!assets/images/*.jpg
+!assets/images/*.svg
 
 # Temporary files
 temp/

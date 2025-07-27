@@ -1,0 +1,15 @@
+# This directory contains performance benchmarks and comparisons
+#
+# Purpose: Store performance testing results, baseline comparisons, and benchmark data
+# Contents:
+#   - Performance test scripts
+#   - Benchmark results and reports
+#   - Model comparison data
+#   - Performance metrics over time
+#   - Baseline model implementations
+#
+# Guidelines:
+#   - Include timestamp in result filenames
+#   - Store both raw data and processed results
+#   - Document test conditions and environment
+#   - Track performance trends over releases

@@ -1,0 +1,16 @@
+# This directory contains development tools and utilities
+#
+# Purpose: Store utility scripts and tools for development and maintenance
+# Contents:
+#   - Data validation and quality checking tools
+#   - Model comparison and analysis utilities
+#   - Performance profiling and monitoring tools
+#   - Debugging and diagnostic scripts
+#   - Automation and maintenance utilities
+#
+# Guidelines:
+#   - Include comprehensive documentation for each tool
+#   - Follow consistent naming conventions
+#   - Make tools configurable and reusable
+#   - Include usage examples and help text
+#   - Test tools thoroughly before deployment

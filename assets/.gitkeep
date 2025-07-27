@@ -1,0 +1,15 @@
+# This directory contains static assets and media files
+#
+# Purpose: Store project-related images, screenshots, diagrams, and other media assets
+# Contents:
+#   - Project logos and branding materials
+#   - Architecture diagrams and flowcharts
+#   - Screenshots for documentation
+#   - Icons and UI assets
+#   - Marketing materials
+#
+# Guidelines:
+#   - Use descriptive filenames
+#   - Optimize images for web use
+#   - Include source files when possible
+#   - Maintain consistent naming conventions

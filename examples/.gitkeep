@@ -1,0 +1,15 @@
+# This directory contains usage examples and tutorials
+#
+# Purpose: Provide practical examples and code samples for using the NIDS system
+# Contents:
+#   - Basic usage examples
+#   - Advanced feature demonstrations
+#   - Integration examples with other systems
+#   - Tutorial notebooks and scripts
+#   - API usage examples
+#
+# Guidelines:
+#   - Include comprehensive comments and documentation
+#   - Test examples regularly to ensure they work
+#   - Provide examples for different skill levels
+#   - Include expected outputs where appropriate

@@ -1,0 +1,16 @@
+# This directory contains generated reports and analysis results
+#
+# Purpose: Store analytical reports, model evaluations, and data quality assessments
+# Contents:
+#   - Model performance reports
+#   - Data quality assessment reports
+#   - Experimental results and comparisons
+#   - Automated analysis outputs
+#   - Business intelligence reports
+#
+# Guidelines:
+#   - Include generation timestamp in filenames
+#   - Use standard report formats (PDF, HTML, CSV)
+#   - Include executive summaries for business reports
+#   - Archive old reports periodically
+#   - Ensure reports are self-contained and documented

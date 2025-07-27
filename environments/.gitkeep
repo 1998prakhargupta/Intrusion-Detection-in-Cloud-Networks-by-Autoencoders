@@ -1,0 +1,15 @@
+# This directory contains development environment configurations
+#
+# Purpose: Store environment-specific configurations for different deployment scenarios
+# Contents:
+#   - Conda environment files (environment.yml)
+#   - Docker environment configurations
+#   - Vagrant configurations
+#   - Development tool configurations
+#   - Environment setup scripts
+#
+# Guidelines:
+#   - Separate by environment type (conda, docker, vagrant)
+#   - Include detailed documentation for each environment
+#   - Pin dependency versions for reproducibility
+#   - Test environments regularly for compatibility
