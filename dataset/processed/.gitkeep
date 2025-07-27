@@ -1,0 +1,10 @@
+# Processed data directory
+#
+# This directory stores preprocessed and cleaned data:
+# - Feature-engineered datasets
+# - Normalized and scaled data
+# - Train/validation/test splits
+# - Preprocessed network features
+# - Cleaned and filtered datasets
+#
+# Essential for model training and evaluation pipelines.

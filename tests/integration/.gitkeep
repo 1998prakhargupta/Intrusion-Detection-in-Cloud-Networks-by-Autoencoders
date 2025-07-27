@@ -1,0 +1,10 @@
+# Integration tests directory
+#
+# This directory contains integration tests for system workflows:
+# - End-to-end pipeline tests
+# - API integration tests
+# - Database integration tests
+# - Model training workflow tests
+# - System component interaction tests
+#
+# Essential for validating complete system functionality.

@@ -1,0 +1,11 @@
+# This file ensures the logs directory is tracked by Git
+# 
+# The logs directory is essential for the NIDS application to store:
+# - Training logs
+# - Inference logs  
+# - Performance monitoring logs
+# - Error logs
+# - Application runtime logs
+#
+# Even when empty, this directory structure should be maintained
+# for proper application functionality.

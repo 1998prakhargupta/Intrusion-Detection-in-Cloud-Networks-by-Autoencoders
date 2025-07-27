@@ -1,0 +1,65 @@
+groups:
+- name: nids_alerts
+  rules:
+  - alert: NIDSAPIDown
+    expr: up{job="nids-api"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "NIDS API is down"
+      description: "NIDS API has been down for more than 1 minute."
+
+  - alert: HighCPUUsage
+    expr: rate(process_cpu_seconds_total{job="nids-api"}[5m]) * 100 > 80
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High CPU usage detected"
+      description: "CPU usage is above 80% for more than 5 minutes."
+
+  - alert: HighMemoryUsage
+    expr: process_resident_memory_bytes{job="nids-api"} / 1024 / 1024 / 1024 > 0.8
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High memory usage detected"
+      description: "Memory usage is above 800MB for more than 5 minutes."
+
+  - alert: HighErrorRate
+    expr: rate(http_requests_total{job="nids-api",status=~"5.."}[5m]) / rate(http_requests_total{job="nids-api"}[5m]) > 0.1
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High error rate detected"
+      description: "Error rate is above 10% for more than 5 minutes."
+
+  - alert: SlowResponseTime
+    expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="nids-api"}[5m])) > 2
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Slow response time detected"
+      description: "95th percentile response time is above 2 seconds for more than 5 minutes."
+
+  - alert: HighAnomalyRate
+    expr: rate(anomaly_predictions_total{job="nids-api",prediction="anomaly"}[5m]) / rate(anomaly_predictions_total{job="nids-api"}[5m]) > 0.5
+    for: 10m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High anomaly detection rate"
+      description: "Anomaly detection rate is above 50% for more than 10 minutes. This may indicate an attack or model drift."
+
+  - alert: ModelThresholdDrift
+    expr: abs(anomaly_threshold{job="nids-api"} - anomaly_threshold{job="nids-api"} offset 1h) > 0.1
+    for: 30m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Model threshold drift detected"
+      description: "Anomaly threshold has drifted by more than 0.1 in the last hour."

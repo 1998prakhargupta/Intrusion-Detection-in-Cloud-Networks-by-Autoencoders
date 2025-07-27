@@ -1,0 +1,418 @@
+# ===============================================
+# NIDS Autoencoder Project - Production .gitignore
+# ===============================================
+
+# ============ Python ============
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# ============ IDE/Editor ============
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# JetBrains
+.idea/
+*.swp
+*.swo
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*~
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ============ Operating System ============
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.tmp
+*.temp
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ============ NIDS Project Specific ============
+# Data files - exclude data but keep structure
+dataset/*.csv
+dataset/*.json
+dataset/*.parquet
+dataset/*.h5
+dataset/*.hdf5
+dataset/raw/*
+dataset/processed/*
+dataset/external/*
+data/
+# Keep directory structure and sample data
+!dataset/.gitkeep
+!dataset/*/.gitkeep
+!dataset/sample_data.csv
+!dataset/CIDDS-001-external-week3_1.csv
+
+# Model files - exclude models but keep structure
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/*.pt
+models/*.pth
+models/*.onnx
+models/*.tflite
+models/checkpoints/*
+models/experiments/*
+# Keep directory structure and documentation
+!models/.gitkeep
+!models/*/.gitkeep
+!models/README.md
+!models/production_autoencoder.pkl
+
+# Logs and monitoring - exclude logs but keep structure
+logs/*.log
+logs/*.out
+logs/*.err
+logs/training/*
+logs/inference/*
+logs/monitoring/*
+*.log
+# Keep directory structure
+!logs/.gitkeep
+!logs/*/.gitkeep
+
+# Temporary files
+temp/
+tmp/
+scratch/
+.temp/
+
+# Experiment tracking
+mlruns/
+.mlflow/
+wandb/
+tensorboard_logs/
+experiments/
+runs/
+
+# Profiling
+*.prof
+*.profile
+profiling_results/
+
+# Configuration secrets
+.env.local
+.env.production
+.env.staging
+secrets/
+credentials/
+keys/
+certificates/
+ssl/
+
+# Cache directories
+.cache/
+cache/
+.tmp/
+
+# Performance monitoring
+monitoring/prometheus/data/
+monitoring/grafana/data/
+monitoring/logs/
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+.docker/
+
+# Kubernetes
+k8s/secrets/
+k8s/configmaps/
+
+# Backup files
+*.bak
+*.backup
+*.old
+*_backup
+*_old
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Archive files
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Large files (>100MB)
+*.bin
+*.large
+
+# ============ CI/CD ============
+# GitHub Actions
+.github/workflows/secrets/
+
+# Jenkins
+.jenkins/
+
+# GitLab CI
+.gitlab-ci-local/
+
+# ============ Security ============
+# Private keys
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# API keys and tokens
+.api_keys
+.tokens
+.secrets
+
+# ============ Performance & Analysis ============
+# Profiling results
+*.cprof
+*.pstats
+
+# Benchmark results
+benchmark_results/
+performance_reports/
+
+# Memory dumps
+*.dmp
+core.*
+
+# ============ Documentation ============
+# Generated docs
+docs/_build/
+docs/build/
+site/
+
+# Temporary documentation files
+*.tmp.md
+*.draft.md
+
+# ============ Miscellaneous ============
+# Local development files
+local_config.*
+development.*
+dev_*
+
+# Test output
+test_output/
+test_results/
+screenshots/
+# Keep test directory structure
+!tests/.gitkeep
+!tests/*/.gitkeep
+
+# Notebook outputs (keep notebooks but ignore outputs)
+*.ipynb
+!detection_by_Autoencoders.ipynb
+
+# Lock files for different package managers
+yarn.lock
+package-lock.json
+Pipfile.lock
+poetry.lock
+
+# Editor backup files
+*~
+*.swp
+*.swo
+.#*
+\#*#
+
+# ============ End of .gitignore ============
+
+# ============ Important: Always Include Structure Files ============
+# Ensure .gitkeep files are never ignored
+!**/.gitkeep

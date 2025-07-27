@@ -1,0 +1,10 @@
+# Model checkpoints directory
+#
+# This directory stores model training checkpoints:
+# - Intermediate training state saves
+# - Best model checkpoints during training
+# - Recovery points for interrupted training
+# - Incremental model versions
+# - Training resume points
+#
+# Critical for training continuity and model versioning.

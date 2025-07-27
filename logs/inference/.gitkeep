@@ -1,0 +1,10 @@
+# Inference logs directory
+#
+# This directory stores logs related to model inference:
+# - Prediction request logs
+# - Response time metrics
+# - Anomaly detection results
+# - API endpoint access logs
+# - Real-time monitoring data
+#
+# Critical for production monitoring and performance analysis.

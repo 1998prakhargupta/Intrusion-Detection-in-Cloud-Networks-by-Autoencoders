@@ -1,0 +1,11 @@
+# Dataset directory
+#
+# This directory contains all project datasets:
+# - Training and validation data
+# - Test datasets
+# - Raw and processed data
+# - External reference data
+# - Sample datasets for testing
+#
+# Critical directory for the NIDS machine learning pipeline.
+# Structure maintained for data organization and pipeline integrity.

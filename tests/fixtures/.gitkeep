@@ -1,0 +1,10 @@
+# Test fixtures directory
+#
+# This directory contains test data and fixtures:
+# - Sample network traffic data
+# - Mock API responses
+# - Test configuration files
+# - Reference model outputs
+# - Synthetic test datasets
+#
+# Important for consistent and reproducible testing.

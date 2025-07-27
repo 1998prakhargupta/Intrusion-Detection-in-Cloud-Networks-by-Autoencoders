@@ -1,0 +1,161 @@
+# Model Configuration
+model:
+  name: "NetworkIntrusionAutoencoder"
+  version: "1.0.0"
+  
+  architecture:
+    input_size: 4
+    hidden_size: 2
+    activation: "relu"
+    dropout_rate: 0.1
+    batch_norm: false
+  
+  training:
+    epochs: 200
+    batch_size: 64
+    learning_rate: 0.01
+    weight_decay: 1e-5
+    early_stopping:
+      enabled: true
+      patience: 20
+      min_delta: 1e-6
+    
+    validation_split: 0.2
+    shuffle: true
+    seed: 42
+
+# Data Configuration
+data:
+  source:
+    path: "dataset/CIDDS-001-external-week3_1.csv"
+    format: "csv"
+    encoding: "utf-8"
+  
+  features:
+    selected:
+      - "Duration"
+      - "Orig_bytes"
+      - "Resp_bytes" 
+      - "Orig_pkts"
+    
+    target_column: "class"
+    normal_class: "normal"
+  
+  preprocessing:
+    scaling:
+      method: "minmax"  # minmax, standard, robust
+      feature_range: [0, 1]
+    
+    missing_values:
+      strategy: "median"  # mean, median, mode, drop
+      threshold: 0.05  # Drop columns with >5% missing values
+    
+    outliers:
+      method: "iqr"  # iqr, zscore, isolation_forest
+      threshold: 3.0
+
+# Threshold Configuration
+thresholds:
+  methods:
+    - "percentile"
+    - "statistical" 
+    - "roc_optimal"
+  
+  percentile:
+    value: 95
+  
+  statistical:
+    n_std: 2.0
+  
+  roc_optimal:
+    optimization_metric: "f1"  # f1, youden, precision, recall
+
+# Evaluation Configuration
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1_score"
+    - "roc_auc"
+    - "confusion_matrix"
+  
+  cross_validation:
+    enabled: false
+    folds: 5
+    stratified: true
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  handlers:
+    console:
+      enabled: true
+      level: "INFO"
+    
+    file:
+      enabled: true
+      level: "DEBUG"
+      path: "logs/training.log"
+      max_bytes: 10485760  # 10MB
+      backup_count: 5
+  
+  loggers:
+    - "src.core"
+    - "src.models"
+    - "src.data"
+
+# Output Configuration
+output:
+  model_path: "models/autoencoder_trained.pth"
+  scaler_path: "models/scaler.joblib"
+  config_path: "models/config.yaml"
+  
+  results:
+    path: "results/"
+    format: "json"  # json, csv, parquet
+  
+  plots:
+    enabled: true
+    path: "results/plots/"
+    dpi: 300
+    format: "png"  # png, pdf, svg
+
+# Monitoring Configuration
+monitoring:
+  enabled: true
+  
+  metrics:
+    collection_interval: 60  # seconds
+    retention_days: 30
+  
+  alerts:
+    enabled: true
+    thresholds:
+      training_loss: 0.1
+      validation_loss: 0.2
+      memory_usage: 0.8  # 80%
+      
+# Compute Configuration
+compute:
+  device: "auto"  # auto, cpu, cuda, mps
+  
+  cpu:
+    num_workers: 4
+    pin_memory: true
+  
+  gpu:
+    memory_fraction: 0.8
+    allow_growth: true
+  
+  distributed:
+    enabled: false
+    backend: "nccl"
+
+# Reproducibility
+reproducibility:
+  seed: 42
+  deterministic: true
+  benchmark: false

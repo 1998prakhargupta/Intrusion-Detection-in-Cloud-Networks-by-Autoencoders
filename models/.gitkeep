@@ -1,0 +1,11 @@
+# Models directory
+#
+# This directory contains all trained models and related artifacts:
+# - Production-ready trained models
+# - Model checkpoints and versions
+# - Experimental model variants
+# - Model metadata and configurations
+# - Serialized model files
+#
+# Core directory for the NIDS autoencoder model storage.
+# Essential for model deployment and version management.

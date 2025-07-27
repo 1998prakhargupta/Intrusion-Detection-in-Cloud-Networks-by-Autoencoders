@@ -1,0 +1,274 @@
+# ===============================================
+# NIDS Autoencoder Project - Pre-commit Configuration
+# ===============================================
+
+# See https://pre-commit.com for more information
+# To install: pre-commit install
+# To run manually: pre-commit run --all-files
+
+repos:
+  # ============ Pre-commit Hooks ============
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      # Basic file checks
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      
+      # Python specific
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-docstring-first
+      - id: debug-statements
+      - id: name-tests-test
+        args: [--pytest-test-first]
+      
+      # Security
+      - id: detect-private-key
+      - id: detect-aws-credentials
+        args: [--allow-missing-credentials]
+      
+      # File formatting
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: pretty-format-json
+        args: [--autofix]
+
+  # ============ Python Code Formatting ============
+  - repo: https://github.com/psf/black
+    rev: 23.9.1
+    hooks:
+      - id: black
+        language_version: python3
+        args: [--line-length=88, --target-version=py38]
+
+  # ============ Import Sorting ============
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: [--profile=black, --line-length=88]
+
+  # ============ Code Linting ============
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-docstrings
+          - flake8-bugbear
+          - flake8-comprehensions
+          - flake8-simplify
+          - flake8-pytest-style
+          - flake8-return
+          - flake8-use-fstring
+        args: [--max-line-length=88, --extend-ignore=E203,W503,E501]
+
+  # ============ Type Checking ============
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.5.1
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-all]
+        args: [--ignore-missing-imports, --follow-imports=skip]
+        exclude: ^(tests/|docs/)
+
+  # ============ Security Scanning ============
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        args: [-c, pyproject.toml]
+        additional_dependencies: ["bandit[toml]"]
+        exclude: ^tests/
+
+  # ============ Dependency Security ============
+  - repo: https://github.com/pyupio/safety
+    rev: 2.3.5
+    hooks:
+      - id: safety
+        args: [--short-report, --ignore=51457]
+
+  # ============ Secret Detection ============
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package.lock.json
+
+  # ============ Dockerfile Linting ============
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker
+        args: [--ignore, DL3008, --ignore, DL3009]
+
+  # ============ YAML Linting ============
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.32.0
+    hooks:
+      - id: yamllint
+        args: [--format, parsable, --strict]
+
+  # ============ Markdown Linting ============
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.37.0
+    hooks:
+      - id: markdownlint
+        args: [--fix]
+
+  # ============ Shell Script Linting ============
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.9.0
+    hooks:
+      - id: shellcheck
+
+  # ============ Jupyter Notebook Cleaning ============
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.6.1
+    hooks:
+      - id: nbstripout
+        files: \.ipynb$
+
+  # ============ Documentation ============
+  - repo: https://github.com/pycqa/pydocstyle
+    rev: 6.3.0
+    hooks:
+      - id: pydocstyle
+        args: [--convention=google]
+        additional_dependencies: [pydocstyle[toml]]
+
+  # ============ Requirements ============
+  - repo: https://github.com/jazzband/pip-tools
+    rev: 7.3.0
+    hooks:
+      - id: pip-compile
+        files: ^requirements\.in$
+        args: [--generate-hashes]
+      - id: pip-compile
+        files: ^requirements-dev\.in$
+        args: [--generate-hashes]
+
+  # ============ Local Hooks ============
+  - repo: local
+    hooks:
+      # Custom Python tests
+      - id: tests
+        name: Run tests
+        entry: pytest
+        language: python
+        args: [tests/, -x, -q]
+        pass_filenames: false
+        always_run: false
+        stages: [manual]
+      
+      # Custom linting
+      - id: pylint
+        name: PyLint
+        entry: pylint
+        language: python
+        args: [--rcfile=.pylintrc, --score=no]
+        files: ^src/.*\.py$
+        
+      # Check for print statements
+      - id: check-print-statements
+        name: Check for print statements
+        entry: python -c "import re, sys; sys.exit(bool(re.search(r'^\s*print\(', open(sys.argv[1]).read(), re.M)))"
+        language: python
+        files: ^src/.*\.py$
+        
+      # Check for debug imports
+      - id: check-debug-imports
+        name: Check for debug imports
+        entry: python -c "import re, sys; sys.exit(bool(re.search(r'^(import pdb|from pdb import|import ipdb|from ipdb import)', open(sys.argv[1]).read(), re.M)))"
+        language: python
+        files: ^src/.*\.py$
+        
+      # Check for TODO/FIXME comments
+      - id: check-todos
+        name: Check for TODO/FIXME
+        entry: python -c "import re, sys; sys.exit(bool(re.search(r'(TODO|FIXME|XXX)', open(sys.argv[1]).read(), re.I)))"
+        language: python
+        files: ^src/.*\.py$
+        stages: [manual]
+        
+      # Validate configuration files
+      - id: validate-config
+        name: Validate configuration files
+        entry: python scripts/validate_config.py
+        language: python
+        files: ^config/.*\.(yaml|yml|json)$
+        pass_filenames: true
+        
+      # Check model file sizes
+      - id: check-model-size
+        name: Check model file sizes
+        entry: python -c "import sys, os; [sys.exit(1) for f in sys.argv[1:] if os.path.getsize(f) > 100*1024*1024]"
+        language: python
+        files: ^models/.*\.(pkl|pth|h5|onnx)$
+        
+      # Validate requirements
+      - id: validate-requirements
+        name: Validate requirements
+        entry: python -c "import pkg_resources; [pkg_resources.Requirement.parse(line.strip()) for line in open('requirements.txt') if line.strip() and not line.startswith('#')]"
+        language: python
+        files: ^requirements.*\.txt$
+        pass_filenames: false
+
+# ============ Configuration ============
+default_stages: [commit]
+default_language_version:
+  python: python3
+
+# Fail fast - stop on first failure
+fail_fast: false
+
+# Skip hooks for specific files
+exclude: |
+  (?x)(
+    # Ignore version files
+    ^src/_version\.py$|
+    # Ignore generated files
+    ^src/.*_pb2\.py$|
+    # Ignore migration files
+    ^migrations/versions/.*\.py$|
+    # Ignore vendored code
+    ^vendor/|
+    # Ignore build artifacts
+    ^build/|
+    ^dist/|
+    ^.*\.egg-info/
+  )
+
+# Minimum pre-commit version
+minimum_pre_commit_version: 3.0.0
+
+# ============ CI Configuration ============
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit.com hooks
+    
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false
+
+# ============ End of .pre-commit-config.yaml ============

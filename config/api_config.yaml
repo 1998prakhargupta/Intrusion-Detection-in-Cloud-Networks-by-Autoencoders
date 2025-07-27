@@ -1,0 +1,168 @@
+# API Configuration
+api:
+  title: "Network Intrusion Detection API"
+  description: "REST API for network anomaly detection using autoencoders"
+  version: "1.0.0"
+  
+  server:
+    host: "0.0.0.0"
+    port: 8000
+    workers: 4
+    
+    uvicorn:
+      reload: false
+      access_log: true
+      use_colors: true
+      loop: "uvloop"
+      http: "httptools"
+      
+  cors:
+    enabled: true
+    origins:
+      - "http://localhost:3000"
+      - "http://localhost:8080"
+      - "https://yourdomain.com"
+    methods: ["GET", "POST", "PUT", "DELETE"]
+    headers: ["*"]
+    credentials: true
+
+# Model Configuration
+model:
+  path: "models/autoencoder_trained.pth"
+  scaler_path: "models/scaler.joblib" 
+  config_path: "models/config.yaml"
+  
+  inference:
+    batch_size: 32
+    timeout: 30  # seconds
+    device: "auto"  # auto, cpu, cuda
+    
+  cache:
+    enabled: true
+    ttl: 3600  # seconds
+    max_size: 1000
+
+# Security Configuration
+security:
+  authentication:
+    enabled: false  # Set to true for production
+    method: "api_key"  # api_key, jwt, oauth2
+    
+    api_key:
+      header_name: "X-API-Key"
+      key: "${NIDS_API_KEY}"
+      
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+    burst_size: 10
+    
+  request_validation:
+    max_payload_size: 1048576  # 1MB
+    timeout: 30
+
+# Database Configuration (if needed)
+database:
+  enabled: false
+  
+  postgres:
+    host: "localhost"
+    port: 5432
+    database: "nids"
+    username: "${POSTGRES_USER}"
+    password: "${POSTGRES_PASSWORD}"
+    pool_size: 10
+    max_overflow: 20
+
+# Redis Configuration (for caching)
+redis:
+  enabled: false
+  
+  connection:
+    host: "localhost"
+    port: 6379
+    database: 0
+    password: "${REDIS_PASSWORD}"
+    
+  cache:
+    default_ttl: 3600
+    key_prefix: "nids:"
+
+# Monitoring Configuration
+monitoring:
+  metrics:
+    enabled: true
+    endpoint: "/metrics"
+    
+    prometheus:
+      enabled: true
+      namespace: "nids"
+      
+  health_checks:
+    enabled: true
+    endpoint: "/health"
+    
+    checks:
+      - "model_loaded"
+      - "memory_usage"
+      - "disk_space"
+      
+  tracing:
+    enabled: false
+    
+    jaeger:
+      endpoint: "http://localhost:14268/api/traces"
+      service_name: "nids-api"
+
+# Logging Configuration  
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
+  
+  handlers:
+    console:
+      enabled: true
+      level: "INFO"
+      
+    file:
+      enabled: true
+      level: "DEBUG" 
+      path: "logs/api.log"
+      max_bytes: 10485760
+      backup_count: 5
+      
+    json:
+      enabled: false
+      path: "logs/api.json"
+      
+  access_log:
+    enabled: true
+    path: "logs/access.log"
+
+# Development Configuration
+development:
+  debug: false
+  reload: false
+  profiling: false
+  
+  swagger_ui:
+    enabled: true
+    path: "/docs"
+    
+  redoc:
+    enabled: true  
+    path: "/redoc"
+
+# Production Configuration
+production:
+  workers: 4
+  preload_app: true
+  max_requests: 1000
+  max_requests_jitter: 100
+  timeout: 30
+  keepalive: 5
+  
+  ssl:
+    enabled: false
+    cert_file: "/path/to/cert.pem"
+    key_file: "/path/to/key.pem"

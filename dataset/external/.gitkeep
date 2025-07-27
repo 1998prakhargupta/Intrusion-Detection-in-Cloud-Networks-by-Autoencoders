@@ -1,0 +1,10 @@
+# External data directory
+#
+# This directory stores external datasets and references:
+# - Third-party threat intelligence feeds
+# - External validation datasets
+# - Benchmark comparison data
+# - Public security datasets
+# - Research collaboration data
+#
+# Important for model validation and comparative analysis.

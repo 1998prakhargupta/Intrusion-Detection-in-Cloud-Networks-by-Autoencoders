@@ -1,0 +1,10 @@
+# Monitoring logs directory
+#
+# This directory stores system and application monitoring logs:
+# - Health check results
+# - Performance metrics
+# - Resource utilization logs
+# - Alert and notification logs
+# - System status reports
+#
+# Essential for maintaining system reliability and performance.

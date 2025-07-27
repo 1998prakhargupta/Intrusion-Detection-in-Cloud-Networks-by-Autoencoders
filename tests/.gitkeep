@@ -1,0 +1,12 @@
+# This file ensures the tests directory is tracked by Git
+#
+# The tests directory is essential for the NIDS project testing structure:
+# - Unit tests for individual components
+# - Integration tests for system workflows
+# - End-to-end tests for complete functionality
+# - Performance benchmarks
+# - Security tests
+# - Mock data and fixtures
+#
+# This directory structure should be maintained even when empty
+# to support the testing framework and CI/CD pipelines.

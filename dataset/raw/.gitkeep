@@ -1,0 +1,10 @@
+# Raw data directory
+#
+# This directory stores unprocessed, original data files:
+# - Raw network traffic captures
+# - Original dataset downloads
+# - Unmodified PCAP files
+# - Source data before preprocessing
+# - Reference datasets
+#
+# Important for data lineage and reproducibility.

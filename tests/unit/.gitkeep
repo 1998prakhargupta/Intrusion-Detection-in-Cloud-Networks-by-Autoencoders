@@ -1,0 +1,10 @@
+# Unit tests directory
+#
+# This directory contains unit tests for individual components:
+# - Data processing function tests
+# - Model component tests
+# - Utility function tests
+# - Configuration validation tests
+# - API endpoint unit tests
+#
+# Critical for ensuring component reliability and code quality.

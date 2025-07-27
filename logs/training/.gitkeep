@@ -1,0 +1,10 @@
+# Training logs directory
+#
+# This directory stores logs related to model training:
+# - Training progress and metrics
+# - Loss curves and validation scores
+# - Hyperparameter tuning logs
+# - Training error logs
+# - Model checkpoint information
+#
+# Essential for monitoring training processes and debugging.

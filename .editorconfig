@@ -1,0 +1,86 @@
+# ===============================================
+# NIDS Autoencoder Project - EditorConfig
+# ===============================================
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# Python files
+[*.py]
+indent_size = 4
+max_line_length = 88
+
+# YAML files
+[*.{yml,yaml}]
+indent_size = 2
+
+# JSON files
+[*.json]
+indent_size = 2
+
+# JavaScript/TypeScript files
+[*.{js,ts}]
+indent_size = 2
+
+# HTML/CSS files
+[*.{html,css}]
+indent_size = 2
+
+# XML files
+[*.xml]
+indent_size = 2
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+
+# Configuration files
+[*.{toml,ini,cfg}]
+indent_size = 4
+
+# Shell scripts
+[*.{sh,bash}]
+indent_size = 2
+
+# Dockerfile
+[{Dockerfile,*.dockerfile}]
+indent_size = 4
+
+# Makefile
+[{Makefile,*.mk}]
+indent_style = tab
+indent_size = 4
+
+# Docker Compose
+[docker-compose*.yml]
+indent_size = 2
+
+# GitHub Actions
+[.github/workflows/*.yml]
+indent_size = 2
+
+# Jupyter Notebooks (JSON format)
+[*.ipynb]
+indent_size = 2
+
+# Requirements files
+[requirements*.txt]
+indent_size = 0
+
+# Git files
+[.gitignore]
+indent_size = 0
+
+# License files
+[LICENSE*]
+indent_size = 0
