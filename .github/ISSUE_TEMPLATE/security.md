@@ -12,7 +12,7 @@ assignees: ''
 **Please do not post security vulnerabilities in public issues!**
 
 For security vulnerabilities, please:
-1. Email us at: security@yourcompany.com
+1. Email us at: 1998prakhargupta@gmail.com
 2. Include "NIDS Autoencoder Security" in the subject line
 3. Provide detailed information about the vulnerability
 4. Allow us to respond within 48 hours

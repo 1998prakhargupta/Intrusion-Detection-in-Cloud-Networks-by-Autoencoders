@@ -5,8 +5,8 @@ NIDS Autoencoder Project Setup Configuration
 A production-ready Network Intrusion Detection System using autoencoders
 for anomaly detection in network traffic.
 
-Author: Your Name
-Email: your.email@example.com
+Author: Prakhar Gupta
+Email: 1998prakhargupta@gmail.com
 License: MIT
 """
 
@@ -20,12 +20,12 @@ from setuptools import find_packages, setup
 # ============ Package Information ============
 PACKAGE_NAME = "nids_autoencoder"
 VERSION = "1.0.0"
-AUTHOR = "Your Name"
-AUTHOR_EMAIL = "your.email@example.com"
+AUTHOR = "Prakhar Gupta"
+AUTHOR_EMAIL = "1998prakhargupta@gmail.com"
 DESCRIPTION = "Production-ready Network Intrusion Detection System using Autoencoders"
 LICENSE = "MIT"
-URL = "https://github.com/yourusername/nids-autoencoder"
-DOWNLOAD_URL = "https://github.com/yourusername/nids-autoencoder/archive/v1.0.0.tar.gz"
+URL = "https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders"
+DOWNLOAD_URL = "https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders/archive/v1.0.0.tar.gz"
 
 # ============ Project Paths ============
 HERE = Path(__file__).parent.absolute()

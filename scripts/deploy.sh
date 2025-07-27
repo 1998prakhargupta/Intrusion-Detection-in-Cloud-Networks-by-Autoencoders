@@ -11,7 +11,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-DOCKER_IMAGE="nids-autoencoder"
+DOCKER_IMAGE="ghcr.io/1998prakhargupta/nids-autoencoder"
 DOCKER_TAG="${DOCKER_TAG:-latest}"
 NAMESPACE="nids-system"
 KUBECTL_TIMEOUT="300s"

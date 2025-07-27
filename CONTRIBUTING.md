@@ -31,8 +31,8 @@ This project adheres to a code of conduct. By participating, you are expected to
 
 ```bash
 # Clone your fork
-git clone https://github.com/yourusername/nids-autoencoder.git
-cd nids-autoencoder
+git clone https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders.git
+cd Intrusion-Detection-in-Cloud-Networks-by-Autoencoders
 
 # Create virtual environment
 python -m venv venv

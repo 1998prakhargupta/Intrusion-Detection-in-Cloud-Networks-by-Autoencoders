@@ -11,7 +11,7 @@ VENV_NAME := .venv
 VENV_ACTIVATE := $(VENV_NAME)/bin/activate
 DOCKER_IMAGE := nids-autoencoder
 DOCKER_TAG := latest
-DOCKER_REGISTRY := localhost:5000
+DOCKER_REGISTRY := ghcr.io/1998prakhargupta
 
 # Directories
 SRC_DIR := src

@@ -4,8 +4,8 @@ A production-ready autoencoder-based anomaly detection system for network securi
 """
 
 __version__ = "1.0.0"
-__author__ = "Your Name"
-__email__ = "your.email@example.com"
+__author__ = "Prakhar Gupta"
+__email__ = "1998prakhargupta@gmail.com"
 __license__ = "MIT"
 
 # Core imports for easy access

@@ -13,10 +13,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - nids-api.yourdomain.com
+    - nids-api.1998prakhargupta.github.io
     secretName: nids-tls-secret
   rules:
-  - host: nids-api.yourdomain.com
+  - host: nids-api.1998prakhargupta.github.io
     http:
       paths:
       - path: /

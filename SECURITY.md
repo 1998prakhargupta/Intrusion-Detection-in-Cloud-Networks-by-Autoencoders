@@ -12,7 +12,7 @@
 If you discover a security vulnerability, please report it responsibly:
 
 1. **DO NOT** open a public issue
-2. Send details to security@yourcompany.com
+2. Send details to 1998prakhargupta@gmail.com
 3. Include:
    - Description of the vulnerability
    - Steps to reproduce

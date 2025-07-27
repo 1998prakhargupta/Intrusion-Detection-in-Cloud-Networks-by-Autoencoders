@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: nids-api
-        image: nids-autoencoder:latest
+        image: ghcr.io/1998prakhargupta/nids-autoencoder:v1.0.0
         imagePullPolicy: Always
         ports:
         - containerPort: 8000

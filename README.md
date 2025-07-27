@@ -53,8 +53,8 @@ src/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/network-intrusion-detection.git
-cd network-intrusion-detection
+git clone https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders.git
+cd Intrusion-Detection-in-Cloud-Networks-by-Autoencoders
 ```
 
 2. **Create virtual environment**
@@ -320,10 +320,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Documentation**: [Read the Docs](https://network-intrusion-detection.readthedocs.io/)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/network-intrusion-detection/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/network-intrusion-detection/discussions)
-- **Email**: security@yourcompany.com
+- **Documentation**: [GitHub Pages](https://1998prakhargupta.github.io/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders/)
+- **Issues**: [GitHub Issues](https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders/discussions)
+- **Email**: 1998prakhargupta@gmail.com
 
 ---
 

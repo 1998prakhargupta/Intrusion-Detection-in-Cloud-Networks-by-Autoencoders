@@ -17,10 +17,10 @@ description = "Production-ready Network Intrusion Detection System using Autoenc
 readme = {file = "README.md", content-type = "text/markdown"}
 license = {file = "LICENSE"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Prakhar Gupta", email = "1998prakhargupta@gmail.com"}
 ]
 maintainers = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Prakhar Gupta", email = "1998prakhargupta@gmail.com"}
 ]
 keywords = [
     "cybersecurity", 
@@ -148,13 +148,13 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/nids-autoencoder"
-Documentation = "https://nids-autoencoder.readthedocs.io/"
-Repository = "https://github.com/yourusername/nids-autoencoder.git"
-Issues = "https://github.com/yourusername/nids-autoencoder/issues"
-Changelog = "https://github.com/yourusername/nids-autoencoder/blob/main/CHANGELOG.md"
-Security = "https://github.com/yourusername/nids-autoencoder/blob/main/SECURITY.md"
-Contributing = "https://github.com/yourusername/nids-autoencoder/blob/main/CONTRIBUTING.md"
+Homepage = "https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders"
+Documentation = "https://1998prakhargupta.github.io/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders/"
+Repository = "https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders.git"
+Issues = "https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders/issues"
+Changelog = "https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders/blob/main/CHANGELOG.md"
+Security = "https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders/blob/main/SECURITY.md"
+Contributing = "https://github.com/1998prakhargupta/Intrusion-Detection-in-Cloud-Networks-by-Autoencoders/blob/main/CONTRIBUTING.md"
 
 [project.scripts]
 nids-train = "src.cli.train:main"
