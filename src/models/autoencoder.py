@@ -8,7 +8,16 @@ from typing import Tuple, Optional, Dict, Any
 from pathlib import Path
 
 from ..utils.logger import LoggerMixin
-from ..utils.config import Config
+try:
+    from ..utils.config import Config
+except ImportError:
+    # Fallback for when pydantic is not available
+    try:
+        from ..utils.config_manager import SimpleConfigManager as Config
+    except ImportError:
+        # Final fallback
+        class Config:
+            pass
 
 
 class AutoencoderModel(nn.Module, LoggerMixin):

@@ -1,0 +1,512 @@
+# Production Environment Configuration
+# This configuration inherits from base.yaml and optimizes for production deployment
+
+# Environment metadata
+environment: "production"
+debug_mode: false
+
+# Model Configuration (optimized for performance)
+model:
+  architecture:
+    input_dim: 20
+    hidden_dims: [128, 64, 32, 64, 128]  # Larger for better performance
+    dropout_rate: 0.05  # Lower for production
+    batch_norm: true
+
+# Training Configuration (production settings)
+training:
+  epochs: 200  # Full training for production
+  batch_size: 64  # Larger batch size for efficiency
+  learning_rate: 0.0005  # Conservative learning rate
+  
+  early_stopping:
+    enabled: true
+    patience: 20  # More patience for production
+    min_delta: 1e-7
+  
+  data_split:
+    validation_split: 0.15
+    test_split: 0.15
+  
+  hardware:
+    device: "auto"
+    mixed_precision: true  # Enable for performance
+    num_workers: 4
+  
+  checkpointing:
+    enabled: true
+    frequency: 10  # Less frequent in production
+    save_best_only: true
+    directory: "artifacts/production_checkpoints"
+  
+  monitoring:
+    log_frequency: 50  # Less frequent logging
+    tensorboard: false  # Disabled in production
+    wandb: true  # Enable for production monitoring
+
+# Data Configuration (production paths)
+data:
+  source:
+    path: "/data/production/network_data.csv"
+    format: "csv"
+    encoding: "utf-8"
+  
+  features:
+    columns:
+      - "Duration"
+      - "Orig_bytes" 
+      - "Resp_bytes"
+      - "Orig_pkts"
+    target_column: "class"
+    normal_class: "normal"
+  
+  preprocessing:
+    missing_values:
+      strategy: "median"
+      threshold: 0.02  # Stricter in production
+    
+    scaling:
+      method: "robust"  # More robust for production
+      feature_range: [0, 1]
+    
+    outliers:
+      detection_method: "isolation_forest"
+      threshold: 2.5
+      action: "flag"  # Don't modify data in production
+  
+  quality:
+    min_samples: 10000  # Require more samples in production
+    sample_validation: true
+  
+  caching:
+    enabled: true
+    directory: "/cache/nids_data"
+    ttl_hours: 72  # Longer TTL in production
+
+# Threshold Configuration (production-tuned)
+thresholds:
+  methods:
+    - "percentile"
+    - "statistical"
+    - "adaptive"
+  
+  percentile:
+    value: 99.0  # More conservative threshold
+  
+  statistical:
+    multiplier: 3.0  # More conservative
+  
+  adaptive:
+    enabled: true
+    update_frequency: "daily"
+  
+  validation:
+    cross_validation_folds: 10
+
+# API Configuration (production-ready)
+api:
+  server:
+    host: "0.0.0.0"
+    port: 8000
+    workers: 4  # Multiple workers for production
+    timeout: 30
+  
+  request:
+    max_batch_size: 1000
+    max_request_size: "100MB"
+  
+  security:
+    authentication_enabled: true
+    cors_enabled: false  # Disabled in production
+    api_key_required: true
+  
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+    burst_limit: 200
+  
+  documentation:
+    enabled: false  # Disabled in production for security
+    title: "NIDS Autoencoder API"
+
+# Logging Configuration (production settings)
+logging:
+  level: "INFO"  # Less verbose in production
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  handlers:
+    console:
+      enabled: false  # Disabled in production
+    
+    file:
+      enabled: true
+      level: "INFO"
+      path: "/var/log/nids/production.log"
+      max_size: "500MB"
+      backup_count: 10
+    
+    syslog:
+      enabled: true
+      facility: "local0"
+      level: "WARNING"
+  
+  loggers:
+    "nids":
+      level: "INFO"
+    "uvicorn":
+      level: "WARNING"  # Reduce noise in production
+  
+  performance:
+    enabled: true
+    slow_request_threshold: 2.0
+
+# Monitoring Configuration (comprehensive production monitoring)
+monitoring:
+  health_checks:
+    enabled: true
+    endpoint: "/health"
+    interval: 30
+    timeout: 10
+  
+  metrics:
+    enabled: true
+    export_interval: 60
+    
+    prometheus:
+      enabled: true
+      port: 9090
+      endpoint: "/metrics"
+    
+    custom_metrics:
+      - "inference_latency"
+      - "detection_accuracy"
+      - "memory_usage"
+      - "cpu_usage"
+  
+  alerting:
+    enabled: true
+    
+    rules:
+      - name: "high_error_rate"
+        condition: "error_rate > 0.05"
+        severity: "critical"
+      
+      - name: "high_latency"
+        condition: "avg_latency > 1000ms"
+        severity: "warning"
+      
+      - name: "low_accuracy"
+        condition: "accuracy < 0.95"
+        severity: "critical"
+    
+    webhooks:
+      enabled: true
+      endpoints:
+        - "https://alerts.company.com/webhook/nids"
+  
+  profiling:
+    enabled: false  # Disabled in production for performance
+
+# Security Configuration (production-grade security)
+security:
+  encryption:
+    enabled: true
+    algorithm: "AES-256-GCM"
+    key_rotation_days: 90
+  
+  authentication:
+    jwt:
+      enabled: true
+      secret_key: "${JWT_SECRET_KEY}"
+      algorithm: "HS256"
+      expiration_hours: 24
+    
+    api_key:
+      enabled: true
+      header_name: "X-API-Key"
+      rate_limiting: true
+  
+  data_protection:
+    mask_sensitive_data: true
+    audit_logging: true
+    retention_days: 365
+  
+  network:
+    tls_enabled: true
+    min_tls_version: "1.2"
+    cipher_suites: ["ECDHE-RSA-AES256-GCM-SHA384"]
+  
+  input_validation:
+    strict_mode: true
+    sanitize_inputs: true
+    max_input_size: "10MB"
+
+# Performance Configuration (production optimization)
+performance:
+  caching:
+    enabled: true
+    backend: "redis"
+    redis_url: "redis://redis-cluster:6379/0"
+    default_ttl: 3600  # 1 hour
+    max_size: "2GB"
+  
+  resource_limits:
+    max_memory_usage: "8GB"
+    max_cpu_usage: 80
+    max_file_descriptors: 65536
+  
+  optimization:
+    enable_jit: true
+    enable_multiprocessing: true
+    enable_gpu_acceleration: true
+    batch_processing: true
+    model_quantization: true
+  
+  connection_pooling:
+    enabled: true
+    max_connections: 100
+    connection_timeout: 30
+
+# Production-specific settings
+production:
+  # Deployment settings
+  deployment:
+    container_registry: "your-registry.com/nids-autoencoder"
+    image_tag: "latest"
+    replicas: 3
+    resource_requests:
+      cpu: "500m"
+      memory: "1Gi"
+    resource_limits:
+      cpu: "2000m"
+      memory: "4Gi"
+  
+  # High availability
+  high_availability:
+    enabled: true
+    load_balancer: "nginx"
+    failover_timeout: 30
+    health_check_interval: 10
+  
+  # Data backup
+  backup:
+    enabled: true
+    schedule: "0 2 * * *"  # Daily at 2 AM
+    retention_days: 30
+    encryption: true
+    storage: "s3://backup-bucket/nids"
+  
+  # Model management
+  model_management:
+    model_registry: "mlflow"
+    auto_deployment: false
+    canary_deployment: true
+    rollback_enabled: true
+  
+  # Compliance
+  compliance:
+    gdpr_enabled: true
+    audit_trail: true
+    data_anonymization: true
+    log_retention_days: 2555  # 7 years
+
+# Environment variable overrides
+environment_variables:
+  DATABASE_URL: "${DATABASE_URL}"
+  REDIS_URL: "${REDIS_URL}"
+  AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+  AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+  JWT_SECRET_KEY: "${JWT_SECRET_KEY}"
+  API_KEY: "${API_KEY}"
+  ENCRYPTION_KEY: "${ENCRYPTION_KEY}"
+
+# Override any base configurations for production
+overrides:
+  force_cpu: false
+  enable_debug_endpoints: false
+  log_all_requests: false
+  strict_validation: true
+  
+  feature_columns:
+    - "Duration"
+    - "Orig_bytes" 
+    - "Resp_bytes"
+    - "Orig_pkts"
+    - "Resp_pkts"
+    - "Orig_ip_bytes"
+    - "Resp_ip_bytes"
+  
+  target_column: "class"
+  normal_class: "normal"
+  anomaly_classes: ["dos", "probe", "r2l", "u2r"]
+  
+  scaling_method: "robust"  # More robust to outliers
+  feature_range: [0, 1]
+  handle_missing: "interpolate"
+  missing_threshold: 0.02  # Stricter threshold
+  outlier_detection: "isolation_forest"
+  outlier_threshold: 0.1
+  
+  train_ratio: 0.8  # More training data
+  val_ratio: 0.1
+  test_ratio: 0.1
+  stratify: true
+  
+  cache_enabled: true
+  cache_dir: "/cache/nids"
+
+# Threshold Configuration
+thresholds:
+  methods: ["percentile", "statistical", "roc_optimal", "precision_recall"]
+  percentile_value: 99.0  # More conservative in production
+  statistical_factor: 3.0  # Higher threshold
+  statistical_method: "mad"  # More robust method
+  roc_metric: "f1"
+  target_precision: 0.99  # Very high precision required
+  target_recall: 0.7
+  default_method: "roc_optimal"
+
+# API Configuration
+api:
+  title: "NIDS Autoencoder API"
+  description: "Production Network Intrusion Detection System"
+  version: "1.0.0"
+  host: "0.0.0.0"
+  port: 8000
+  workers: 8  # More workers for production
+  
+  max_batch_size: 10000  # Higher throughput
+  timeout_seconds: 30
+  keepalive_timeout: 65
+  
+  authentication_enabled: true
+  api_key_header: "X-API-Key"
+  allowed_origins: []  # Strict CORS policy
+  
+  rate_limit_enabled: true
+  requests_per_minute: 1000
+  burst_size: 100
+  
+  metrics_enabled: true
+  health_check_enabled: true
+  request_logging: true
+  
+  docs_enabled: false  # Disabled in production
+  docs_url: "/docs"
+  redoc_url: "/redoc"
+
+# Database Configuration
+database:
+  enabled: true
+  host: "nids-db.internal"
+  port: 5432
+  database: "nids_production"
+  username: "nids_user"
+  password: ""  # Set via NIDS_DB_PASSWORD
+  
+  pool_size: 20
+  max_overflow: 30
+  pool_timeout: 30
+  pool_recycle: 3600
+  
+  echo: false
+  echo_pool: false
+
+# Cache Configuration
+cache:
+  enabled: true
+  
+  redis_enabled: true
+  redis_host: "nids-redis.internal"
+  redis_port: 6379
+  redis_db: 0
+  redis_password: ""  # Set via NIDS_REDIS_PASSWORD
+  
+  memory_enabled: false  # Use Redis in production
+  max_size: 10000
+  ttl_seconds: 7200  # 2 hours
+  
+  file_enabled: false
+  cache_dir: "/cache"
+
+# Logging Configuration
+logging:
+  level: "WARNING"  # Less verbose in production
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+  
+  console_enabled: false  # No console logging in production
+  file_enabled: true
+  json_enabled: true  # Structured logging
+  syslog_enabled: true
+  
+  log_dir: "/var/log/nids"
+  log_file: "nids.log"
+  max_file_size: 52428800  # 50MB
+  backup_count: 10
+  
+  json_file: "nids.json"
+  
+  uvicorn_level: "WARNING"
+  sqlalchemy_level: "ERROR"
+  
+  async_logging: true  # Better performance
+
+# Monitoring Configuration
+monitoring:
+  enabled: true
+  
+  prometheus_enabled: true
+  prometheus_port: 9090
+  namespace: "nids"
+  
+  health_check_interval: 30
+  health_check_timeout: 5
+  
+  alerting_enabled: true
+  alert_webhook_url: "https://alerts.company.com/webhook/nids"
+  
+  profiling_enabled: false
+  memory_profiling: false
+
+# Security Configuration
+security:
+  cors_enabled: true
+  cors_origins: ["https://dashboard.company.com"]  # Specific origins only
+  cors_methods: ["GET", "POST"]
+  
+  jwt_secret: ""  # Set via NIDS_JWT_SECRET
+  jwt_algorithm: "HS256"
+  jwt_expiration: 1800  # 30 minutes
+  
+  encryption_key: ""  # Set via NIDS_ENCRYPTION_KEY
+  
+  max_request_size: 1048576  # 1MB limit
+  validate_content_type: true
+  
+  security_headers_enabled: true
+
+# Deployment Configuration
+deployment:
+  environment: "production"
+  debug: false
+  
+  model_path: "/models/autoencoder_production.pth"
+  scaler_path: "/models/scaler_production.pkl"
+  config_path: "/models/config_production.yaml"
+  
+  container_name: "nids-autoencoder"
+  image_tag: "1.0.0"
+  
+  namespace: "nids"
+  replicas: 6  # High availability
+  
+  cpu_limit: "2000m"
+  memory_limit: "4Gi"
+  cpu_request: "1000m"
+  memory_request: "2Gi"
+
+# Metadata
+config_version: "1.0.0"
+created_at: "2025-07-29T00:00:00"
+updated_at: "2025-07-29T00:00:00"

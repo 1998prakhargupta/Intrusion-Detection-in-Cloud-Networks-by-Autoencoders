@@ -1,0 +1,225 @@
+# Staging Environment Configuration
+# This configuration bridges development and production
+
+# Model Configuration
+model:
+  architecture:
+    input_dim: 20
+    hidden_dims: [96, 48, 24, 48, 96]  # Medium-sized model
+    activation: "relu"
+    dropout_rate: 0.08
+    batch_norm: true
+    layer_norm: false
+
+# Training Configuration  
+training:
+  epochs: 150
+  batch_size: 64
+  learning_rate: 0.0008
+  weight_decay: 5e-5
+  optimizer: "adamw"
+  scheduler: "reduce_on_plateau"
+  
+  early_stopping_enabled: true
+  early_stopping_patience: 20
+  early_stopping_min_delta: 1e-6
+  
+  validation_split: 0.18
+  shuffle: true
+  seed: 42
+  deterministic: true
+  
+  device: "auto"
+  mixed_precision: true
+  
+  checkpoint_enabled: true
+  checkpoint_freq: 15
+  save_best_only: true
+
+# Data Configuration
+data:
+  source_path: "/data/staging/CIDDS-001-external-week3_1.csv"
+  source_format: "csv"
+  encoding: "utf-8"
+  
+  feature_columns:
+    - "Duration"
+    - "Orig_bytes" 
+    - "Resp_bytes"
+    - "Orig_pkts"
+    - "Resp_pkts"
+  
+  target_column: "class"
+  normal_class: "normal"
+  anomaly_classes: ["dos", "probe", "r2l", "u2r"]
+  
+  scaling_method: "standard"
+  feature_range: [0, 1]
+  handle_missing: "median"
+  missing_threshold: 0.03
+  outlier_detection: "iqr"
+  outlier_threshold: 2.5
+  
+  train_ratio: 0.75
+  val_ratio: 0.125
+  test_ratio: 0.125
+  stratify: true
+  
+  cache_enabled: true
+  cache_dir: "/cache/nids-staging"
+
+# Threshold Configuration
+thresholds:
+  methods: ["percentile", "statistical", "roc_optimal", "precision_recall"]
+  percentile_value: 97.0
+  statistical_factor: 2.5
+  statistical_method: "std"
+  roc_metric: "f1"
+  target_precision: 0.97
+  target_recall: 0.75
+  default_method: "roc_optimal"
+
+# API Configuration
+api:
+  title: "NIDS Autoencoder API (Staging)"
+  description: "Network Intrusion Detection System - Staging Environment"
+  version: "1.0.0-staging"
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  
+  max_batch_size: 5000
+  timeout_seconds: 30
+  keepalive_timeout: 15
+  
+  authentication_enabled: true
+  api_key_header: "X-API-Key"
+  allowed_origins: ["https://staging-dashboard.company.com"]
+  
+  rate_limit_enabled: true
+  requests_per_minute: 500
+  burst_size: 50
+  
+  metrics_enabled: true
+  health_check_enabled: true
+  request_logging: true
+  
+  docs_enabled: true  # Enabled for testing
+  docs_url: "/docs"
+  redoc_url: "/redoc"
+
+# Database Configuration
+database:
+  enabled: true
+  host: "nids-db-staging.internal"
+  port: 5432
+  database: "nids_staging"
+  username: "nids_staging_user"
+  password: ""  # Set via NIDS_DB_PASSWORD
+  
+  pool_size: 10
+  max_overflow: 15
+  pool_timeout: 30
+  pool_recycle: 3600
+  
+  echo: false
+  echo_pool: false
+
+# Cache Configuration
+cache:
+  enabled: true
+  
+  redis_enabled: true
+  redis_host: "nids-redis-staging.internal"
+  redis_port: 6379
+  redis_db: 0
+  redis_password: ""
+  
+  memory_enabled: false
+  max_size: 5000
+  ttl_seconds: 3600  # 1 hour
+  
+  file_enabled: false
+  cache_dir: "/cache"
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+  
+  console_enabled: false
+  file_enabled: true
+  json_enabled: true
+  syslog_enabled: false
+  
+  log_dir: "/var/log/nids"
+  log_file: "nids_staging.log"
+  max_file_size: 20971520  # 20MB
+  backup_count: 7
+  
+  json_file: "nids_staging.json"
+  
+  uvicorn_level: "INFO"
+  sqlalchemy_level: "WARNING"
+  
+  async_logging: true
+
+# Monitoring Configuration
+monitoring:
+  enabled: true
+  
+  prometheus_enabled: true
+  prometheus_port: 9090
+  namespace: "nids_staging"
+  
+  health_check_interval: 30
+  health_check_timeout: 5
+  
+  alerting_enabled: true
+  alert_webhook_url: "https://staging-alerts.company.com/webhook/nids"
+  
+  profiling_enabled: false
+  memory_profiling: false
+
+# Security Configuration
+security:
+  cors_enabled: true
+  cors_origins: ["https://staging-dashboard.company.com"]
+  cors_methods: ["GET", "POST", "PUT"]
+  
+  jwt_secret: ""  # Set via NIDS_JWT_SECRET
+  jwt_algorithm: "HS256"
+  jwt_expiration: 2700  # 45 minutes
+  
+  encryption_key: ""  # Set via NIDS_ENCRYPTION_KEY
+  
+  max_request_size: 2097152  # 2MB
+  validate_content_type: true
+  
+  security_headers_enabled: true
+
+# Deployment Configuration
+deployment:
+  environment: "staging"
+  debug: false
+  
+  model_path: "/models/autoencoder_staging.pth"
+  scaler_path: "/models/scaler_staging.pkl"
+  config_path: "/models/config_staging.yaml"
+  
+  container_name: "nids-autoencoder-staging"
+  image_tag: "staging"
+  
+  namespace: "nids-staging"
+  replicas: 3
+  
+  cpu_limit: "1500m"
+  memory_limit: "3Gi"
+  cpu_request: "750m"
+  memory_request: "1.5Gi"
+
+# Metadata
+config_version: "1.0.0"
+created_at: "2025-07-29T00:00:00"
+updated_at: "2025-07-29T00:00:00"

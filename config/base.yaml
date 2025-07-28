@@ -1,0 +1,430 @@
+# Enterprise Configuration Management - Base Configuration
+# This file contains shared configuration across all environments
+
+# Application metadata
+name: "NIDS Autoencoder Enterprise"
+version: "2.0.0"
+description: "Enterprise-grade Network Intrusion Detection System using Autoencoder"
+maintainer: "NIDS Team"
+
+# Model Architecture Configuration
+model:
+  architecture:
+    input_dim: 20
+    hidden_dims: [128, 64, 32, 16, 32, 64, 128]
+    output_dim: null  # Auto-calculated from input_dim
+    activation: "relu"
+    dropout_rate: 0.15
+    batch_norm: true
+    layer_norm: false
+    use_bias: true
+    weight_init: "xavier_uniform"
+  
+  # Model metadata
+  model_type: "autoencoder"
+  architecture_version: "v2.0"
+  
+# Training Configuration
+training:
+  # Core training parameters
+  epochs: 200
+  batch_size: 64
+  learning_rate: 0.001
+  weight_decay: 1e-5
+  optimizer: "adam"
+  scheduler: "reduce_on_plateau"
+  
+  # Early stopping
+  early_stopping:
+    enabled: true
+    patience: 20
+    min_delta: 1e-6
+    metric: "val_loss"
+    mode: "min"
+    restore_best_weights: true
+  
+  # Data splitting
+  data_split:
+    validation_split: 0.2
+    test_split: 0.1
+    shuffle: true
+    stratify: true
+  
+  # Reproducibility
+  reproducibility:
+    seed: 42
+    deterministic: true
+    benchmark: false
+  
+  # Hardware optimization
+  hardware:
+    device: "auto"  # auto, cpu, cuda, mps
+    mixed_precision: false
+    compile_model: false
+    num_workers: 4
+    pin_memory: true
+  
+  # Checkpointing
+  checkpointing:
+    enabled: true
+    frequency: 10
+    save_best_only: true
+    save_last: true
+    directory: "artifacts/checkpoints"
+    filename_template: "checkpoint_epoch_{epoch:03d}_loss_{val_loss:.6f}.pth"
+  
+  # Monitoring and logging
+  monitoring:
+    log_frequency: 10
+    plot_frequency: 50
+    tensorboard: true
+    wandb: false
+    mlflow: false
+    metrics_to_track:
+      - "train_loss"
+      - "val_loss"
+      - "reconstruction_error"
+      - "learning_rate"
+
+# Data Configuration
+data:
+  # Source configuration
+  source:
+    path: "data/raw/CIDDS-001-external-week3_1.csv"
+    format: "csv"
+    encoding: "utf-8"
+    delimiter: ","
+    header: 0
+  
+  # Feature configuration
+  features:
+    columns:
+      - "Duration"
+      - "Orig_bytes"
+      - "Resp_bytes"
+      - "Orig_pkts"
+      - "Resp_pkts"
+      - "Orig_ip_bytes"
+      - "Resp_ip_bytes"
+    target_column: "class"
+    normal_class: "normal"
+    anomaly_classes: ["dos", "probe", "r2l", "u2r"]
+    categorical_columns: []
+    datetime_columns: []
+  
+  # Preprocessing pipeline
+  preprocessing:
+    # Missing values
+    missing_values:
+      strategy: "median"  # drop, mean, median, mode, forward_fill, interpolate
+      threshold: 0.05
+      indicator: false
+    
+    # Scaling
+    scaling:
+      method: "standard"  # standard, minmax, robust, quantile, none
+      feature_range: [0, 1]
+      robust_quantile_range: [25.0, 75.0]
+    
+    # Outlier detection
+    outliers:
+      detection_method: "iqr"  # iqr, zscore, isolation_forest, none
+      threshold: 3.0
+      action: "clip"  # remove, clip, transform
+    
+    # Feature engineering
+    feature_engineering:
+      polynomial_features: false
+      interaction_features: false
+      feature_selection: false
+      pca_enabled: false
+      pca_components: null
+  
+  # Data quality
+  quality:
+    min_samples: 1000
+    max_samples: null
+    sample_validation: true
+    schema_validation: true
+  
+  # Caching
+  caching:
+    enabled: true
+    directory: "data/cache"
+    compression: "gzip"
+    ttl_hours: 24
+
+# Threshold Configuration
+thresholds:
+  # Available methods
+  methods:
+    - "percentile"
+    - "statistical"
+    - "roc_optimal"
+    - "precision_recall_optimal"
+  
+  # Method-specific parameters
+  percentile:
+    value: 95.0
+    interpolation: "linear"
+  
+  statistical:
+    multiplier: 2.5
+    metric: "mean_std"  # mean_std, median_mad
+    robust: true
+  
+  roc_optimal:
+    metric: "f1"  # f1, precision, recall, accuracy, youden
+    curve_points: 1000
+  
+  precision_recall_optimal:
+    metric: "f1"
+    curve_points: 1000
+  
+  # Validation
+  validation:
+    cross_validation_folds: 5
+    validation_metric: "roc_auc"
+    bootstrap_samples: 1000
+
+# API Configuration
+api:
+  # Server settings
+  server:
+    host: "0.0.0.0"
+    port: 8000
+    workers: 4
+    worker_class: "uvicorn.workers.UvicornWorker"
+    max_requests: 1000
+    max_requests_jitter: 100
+    timeout: 30
+    keepalive: 2
+  
+  # Request handling
+  request:
+    max_batch_size: 1000
+    max_request_size: "10MB"
+    max_concurrent_requests: 100
+    request_timeout: 30
+  
+  # Response handling
+  response:
+    compression: true
+    compression_level: 6
+    include_headers: true
+  
+  # Security
+  security:
+    authentication_enabled: false
+    api_key_header: "X-API-Key"
+    cors_enabled: true
+    cors_origins: ["*"]
+    cors_methods: ["GET", "POST", "PUT", "DELETE"]
+    cors_headers: ["*"]
+  
+  # Rate limiting
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+    burst_limit: 20
+    storage_backend: "memory"  # memory, redis
+  
+  # Documentation
+  documentation:
+    enabled: true
+    title: "NIDS Autoencoder API"
+    description: "Enterprise Network Intrusion Detection System API"
+    version: "2.0.0"
+    openapi_url: "/openapi.json"
+    docs_url: "/docs"
+    redoc_url: "/redoc"
+
+# Logging Configuration
+logging:
+  # General settings
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+  
+  # Handlers
+  handlers:
+    console:
+      enabled: true
+      level: "INFO"
+      stream: "stdout"
+    
+    file:
+      enabled: true
+      level: "DEBUG"
+      path: "logs/nids.log"
+      max_size: "10MB"
+      backup_count: 5
+      rotation: true
+    
+    json:
+      enabled: false
+      path: "logs/nids.json"
+      include_extra: true
+  
+  # Loggers
+  loggers:
+    "nids":
+      level: "DEBUG"
+      propagate: false
+    "uvicorn":
+      level: "INFO"
+      propagate: false
+    "fastapi":
+      level: "INFO"
+      propagate: false
+  
+  # Structured logging
+  structured:
+    enabled: false
+    include_request_id: true
+    include_user_id: true
+    include_timestamp: true
+  
+  # Performance logging
+  performance:
+    enabled: false
+    slow_request_threshold: 1.0
+    include_sql_queries: false
+
+# Monitoring Configuration
+monitoring:
+  # Health checks
+  health_checks:
+    enabled: true
+    endpoint: "/health"
+    interval: 30
+    timeout: 10
+    checks:
+      - "database"
+      - "model"
+      - "memory"
+      - "disk"
+  
+  # Metrics
+  metrics:
+    enabled: false
+    prometheus:
+      enabled: false
+      port: 9090
+      endpoint: "/metrics"
+      prefix: "nids"
+    
+    custom_metrics:
+      - "request_count"
+      - "request_duration"
+      - "model_prediction_time"
+      - "anomaly_detection_rate"
+  
+  # Alerting
+  alerting:
+    enabled: false
+    channels:
+      webhook:
+        enabled: false
+        url: null
+        timeout: 10
+      email:
+        enabled: false
+        smtp_server: null
+        recipients: []
+    
+    rules:
+      - name: "high_error_rate"
+        condition: "error_rate > 0.05"
+        severity: "warning"
+      - name: "model_performance_degradation"
+        condition: "roc_auc < 0.8"
+        severity: "critical"
+  
+  # Profiling
+  profiling:
+    enabled: false
+    memory_profiling: false
+    cpu_profiling: false
+    line_profiling: false
+
+# Security Configuration
+security:
+  # Encryption
+  encryption:
+    enabled: false
+    algorithm: "AES-256-GCM"
+    key_path: null
+    rotate_keys: false
+    rotation_interval_days: 90
+  
+  # Authentication
+  authentication:
+    jwt:
+      enabled: false
+      secret_key: null
+      algorithm: "HS256"
+      expiration_hours: 24
+      refresh_token_enabled: true
+    
+    api_key:
+      enabled: false
+      header_name: "X-API-Key"
+      query_param: "api_key"
+  
+  # Authorization
+  authorization:
+    rbac_enabled: false
+    roles: []
+    permissions: []
+  
+  # Data protection
+  data_protection:
+    mask_sensitive_data: true
+    audit_logging: false
+    data_retention_days: 365
+    anonymization_enabled: false
+  
+  # Network security
+  network:
+    tls_enabled: false
+    cert_file: null
+    key_file: null
+    ca_file: null
+    verify_client_cert: false
+  
+  # Input validation
+  input_validation:
+    strict_mode: true
+    max_input_size: "1MB"
+    allowed_file_types: [".csv", ".json"]
+    sanitize_inputs: true
+
+# Performance Configuration
+performance:
+  # Caching
+  caching:
+    enabled: true
+    backend: "memory"  # memory, redis, memcached
+    default_ttl: 3600
+    max_size: "1GB"
+  
+  # Connection pooling
+  connection_pooling:
+    enabled: true
+    max_connections: 100
+    min_connections: 10
+    connection_timeout: 30
+  
+  # Resource limits
+  resource_limits:
+    max_memory_usage: "4GB"
+    max_cpu_usage: 80
+    max_disk_usage: "10GB"
+  
+  # Optimization
+  optimization:
+    enable_jit: false
+    enable_multiprocessing: true
+    enable_gpu_acceleration: true
+    batch_processing: true

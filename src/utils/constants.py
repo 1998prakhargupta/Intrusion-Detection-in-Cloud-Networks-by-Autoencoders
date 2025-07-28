@@ -41,6 +41,9 @@ class ModelDefaults:
     EARLY_STOPPING_PATIENCE = 10
     VALIDATION_SPLIT = 0.2
     
+    # Threshold parameters
+    THRESHOLD_PERCENTILE = 95.0
+    
     # Scaling parameters
     FEATURE_RANGE = (0, 1)
     SCALER_TYPE = "standard"
@@ -48,6 +51,9 @@ class ModelDefaults:
 # Data processing constants
 class DataConstants:
     """Constants for data processing."""
+    
+    # Data file path
+    DATA_FILE_PATH = DEFAULT_DATA_PATH
     
     # Column names to exclude from features
     EXCLUDED_COLUMNS = ["class", "attackType", "attackID", "attackDescription"]
@@ -61,6 +67,13 @@ class DataConstants:
     # Train/test split ratios
     TRAIN_RATIO = 0.8
     VALIDATION_RATIO = 0.2
+    TEST_RATIO = 0.15  # Added missing constant
+    
+    # Data processing parameters
+    CATEGORICAL_ENCODING = "label"  # Added missing constant
+    NORMALIZATION_METHOD = "standard"  # Added missing constant
+    OUTLIER_THRESHOLD = 3.0  # Added missing constant
+    MAX_FEATURES = 1000  # Added missing constant
     
     # Random seed for reproducibility
     RANDOM_SEED = 42
@@ -90,10 +103,19 @@ class APIConstants:
     DEFAULT_PORT = 8000
     DEFAULT_WORKERS = 4
     DEFAULT_TIMEOUT = 30
+    TIMEOUT_SECONDS = 30  # Added missing constant
+    
+    # Request limits
+    MAX_BATCH_SIZE = 1000  # Added missing constant
     
     # Rate limiting
     DEFAULT_RATE_LIMIT = 100
+    RATE_LIMIT_REQUESTS = 100  # Added missing constant
     RATE_LIMIT_WINDOW = 60  # seconds
+    
+    # CORS settings
+    ENABLE_CORS = True  # Added missing constant
+    ENABLE_DOCS = True  # Added missing constant
     
     # Response codes
     SUCCESS_CODE = 200
@@ -107,10 +129,13 @@ class LoggingConstants:
     
     DEFAULT_LEVEL = "INFO"
     DEFAULT_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
+    FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"  # Added missing constant
+    DATE_FORMAT = "%Y-%m-%d %H:%M:%S"  # Added missing constant
     JSON_FORMAT = True
     
     # File rotation
     MAX_BYTES = 10485760  # 10MB
+    MAX_FILE_SIZE = 10485760  # 10MB - Added missing constant
     BACKUP_COUNT = 5
     
     # Log file names
@@ -121,6 +146,9 @@ class LoggingConstants:
 # Performance constants
 class PerformanceConstants:
     """Constants for performance evaluation."""
+    
+    # Metrics collection
+    METRICS_HISTORY_SIZE = 1000  # Added missing constant
     
     # Metrics calculation
     ZERO_DIVISION_REPLACEMENT = 0.0

@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import yaml
 from pydantic import BaseModel, Field, validator
@@ -51,7 +51,7 @@ class DataConfig(BaseModel):
     encoding: str = "utf-8"
     
     # Feature configuration
-    selected_features: list[str] = [
+    selected_features: List[str] = [
         "Duration", "Orig_bytes", "Resp_bytes", "Orig_pkts"
     ]
     target_column: str = "class"
@@ -59,7 +59,7 @@ class DataConfig(BaseModel):
     
     # Preprocessing
     scaling_method: str = "minmax"
-    feature_range: tuple[float, float] = (0, 1)
+    feature_range: Tuple[float, float] = (0, 1)
     missing_strategy: str = "median"
     missing_threshold: float = 0.05
     
@@ -70,7 +70,7 @@ class DataConfig(BaseModel):
 class ThresholdConfig(BaseModel):
     """Threshold configuration schema."""
     
-    methods: list[str] = ["percentile", "statistical", "roc_optimal"]
+    methods: List[str] = ["percentile", "statistical", "roc_optimal"]
     percentile_value: float = Field(default=95, ge=0, le=100)
     statistical_n_std: float = Field(default=2.0, gt=0)
     roc_optimization_metric: str = "f1"

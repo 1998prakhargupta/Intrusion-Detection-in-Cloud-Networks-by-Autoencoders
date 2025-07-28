@@ -59,7 +59,49 @@ jobs:
 
     - name: Test with pytest
       run: |
-        pytest tests/ --cov=src --cov-report=xml --cov-report=html --junitxml=junit.xml
+        # Run unit tests with coverage
+        pytest tests/unit/ -v --cov=src --cov-report=xml:coverage-unit.xml --cov-report=html:htmlcov-unit -m "unit" --junitxml=junit-unit.xml
+        
+        # Run integration tests
+        pytest tests/integration/ -v --cov=src --cov-append --cov-report=xml:coverage-integration.xml --cov-report=html:htmlcov-integration -m "integration" --junitxml=junit-integration.xml
+        
+        # Run all tests for comprehensive coverage
+        pytest tests/ -v --cov=src --cov-report=xml:coverage-all.xml --cov-report=html:htmlcov-all --junitxml=junit-all.xml --maxfail=5
+
+    - name: Run performance tests
+      if: matrix.python-version == '3.9'  # Only run on one Python version
+      run: |
+        pytest tests/ -v -m "slow" --junitxml=junit-performance.xml || true  # Don't fail CI on performance issues
+
+    - name: Generate test report
+      if: always()
+      run: |
+        echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
+        echo "### Unit Tests" >> $GITHUB_STEP_SUMMARY
+        python -c "
+        import xml.etree.ElementTree as ET
+        try:
+            tree = ET.parse('junit-unit.xml')
+            root = tree.getroot()
+            tests = root.get('tests', '0')
+            failures = root.get('failures', '0')
+            errors = root.get('errors', '0')
+            print(f'- Tests: {tests}, Failures: {failures}, Errors: {errors}')
+        except: print('- Unit test results not available')
+        " >> $GITHUB_STEP_SUMMARY
+        
+        echo "### Integration Tests" >> $GITHUB_STEP_SUMMARY
+        python -c "
+        import xml.etree.ElementTree as ET
+        try:
+            tree = ET.parse('junit-integration.xml')
+            root = tree.getroot()
+            tests = root.get('tests', '0')
+            failures = root.get('failures', '0')
+            errors = root.get('errors', '0')
+            print(f'- Tests: {tests}, Failures: {failures}, Errors: {errors}')
+        except: print('- Integration test results not available')
+        " >> $GITHUB_STEP_SUMMARY
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

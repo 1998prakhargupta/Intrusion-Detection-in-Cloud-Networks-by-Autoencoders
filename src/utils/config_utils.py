@@ -3,7 +3,7 @@
 import os
 import json
 from pathlib import Path
-from typing import Dict, Any, Optional, Union, List
+from typing import Dict, Any, Optional, Union, List, Tuple
 from dataclasses import dataclass, asdict
 
 from .constants import ModelDefaults, DataConstants, APIConstants, LoggingConstants, EnvVars
@@ -261,7 +261,7 @@ class ConfigManager:
             else:
                 logger.warning(f"Unknown API config parameter: {key}")
     
-    def validate_configuration(self) -> tuple[bool, list[str]]:
+    def validate_configuration(self) -> Tuple[bool, List[str]]:
         """Validate current configuration.
         
         Returns:

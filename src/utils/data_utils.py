@@ -393,3 +393,153 @@ def safe_divide(numerator: float, denominator: float, default: float = 0.0) -> f
     if denominator == 0:
         return default
     return numerator / denominator
+
+
+def normalize_features(data: Union[np.ndarray, pd.DataFrame], 
+                      method: str = "minmax",
+                      feature_range: Tuple[float, float] = (0, 1)) -> Union[np.ndarray, pd.DataFrame]:
+    """Normalize features using specified method.
+    
+    Args:
+        data: Input data to normalize.
+        method: Normalization method ('minmax', 'standard', 'robust').
+        feature_range: Target range for min-max scaling.
+        
+    Returns:
+        Normalized data.
+    """
+    from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
+    
+    if isinstance(data, pd.DataFrame):
+        original_columns = data.columns
+        original_index = data.index
+        values = data.values
+    else:
+        values = data
+        original_columns = None
+        original_index = None
+    
+    if method == "minmax":
+        scaler = MinMaxScaler(feature_range=feature_range)
+    elif method == "standard":
+        scaler = StandardScaler()
+    elif method == "robust":
+        scaler = RobustScaler()
+    else:
+        raise ValueError(f"Unknown normalization method: {method}")
+    
+    normalized_values = scaler.fit_transform(values)
+    
+    if isinstance(data, pd.DataFrame):
+        return pd.DataFrame(normalized_values, columns=original_columns, index=original_index)
+    else:
+        return normalized_values
+
+
+class DataValidator:
+    """Comprehensive data validation utility."""
+    
+    # Constants
+    INVALID_DATA_TYPE_MSG = "Data must be numpy array or pandas DataFrame"
+    
+    def __init__(self, min_samples: int = 100, min_features: int = 1):
+        """Initialize DataValidator.
+        
+        Args:
+            min_samples: Minimum number of samples required.
+            min_features: Minimum number of features required.
+        """
+        self.min_samples = min_samples
+        self.min_features = min_features
+        self.logger = get_logger(__name__)
+    
+    def validate_shape(self, data: Union[np.ndarray, pd.DataFrame]) -> bool:
+        """Validate data shape requirements.
+        
+        Args:
+            data: Input data to validate.
+            
+        Returns:
+            True if shape is valid.
+            
+        Raises:
+            ValueError: If shape requirements are not met.
+        """
+        if isinstance(data, np.ndarray):
+            n_samples, n_features = data.shape
+        elif isinstance(data, pd.DataFrame):
+            n_samples, n_features = data.shape
+        else:
+            raise ValueError(self.INVALID_DATA_TYPE_MSG)
+        
+        if n_samples < self.min_samples:
+            raise ValueError(f"Insufficient samples: {n_samples} < {self.min_samples}")
+        
+        if n_features < self.min_features:
+            raise ValueError(f"Insufficient features: {n_features} < {self.min_features}")
+        
+        return True
+    
+    def validate_no_missing_values(self, data: Union[np.ndarray, pd.DataFrame]) -> bool:
+        """Validate that data has no missing values.
+        
+        Args:
+            data: Input data to validate.
+            
+        Returns:
+            True if no missing values.
+            
+        Raises:
+            ValueError: If missing values are found.
+        """
+        if isinstance(data, np.ndarray):
+            has_missing = np.isnan(data).any()
+        elif isinstance(data, pd.DataFrame):
+            has_missing = data.isnull().any().any()
+        else:
+            raise ValueError(self.INVALID_DATA_TYPE_MSG)
+        
+        if has_missing:
+            raise ValueError("Data contains missing values")
+        
+        return True
+    
+    def validate_finite_values(self, data: Union[np.ndarray, pd.DataFrame]) -> bool:
+        """Validate that all values are finite.
+        
+        Args:
+            data: Input data to validate.
+            
+        Returns:
+            True if all values are finite.
+            
+        Raises:
+            ValueError: If infinite values are found.
+        """
+        if isinstance(data, np.ndarray):
+            has_infinite = not np.isfinite(data).all()
+        elif isinstance(data, pd.DataFrame):
+            has_infinite = not np.isfinite(data.select_dtypes(include=[np.number])).all().all()
+        else:
+            raise ValueError(self.INVALID_DATA_TYPE_MSG)
+        
+        if has_infinite:
+            raise ValueError("Data contains infinite values")
+        
+        return True
+    
+    def validate_all(self, data: Union[np.ndarray, pd.DataFrame]) -> bool:
+        """Run all validation checks.
+        
+        Args:
+            data: Input data to validate.
+            
+        Returns:
+            True if all validations pass.
+        """
+        self.validate_shape(data)
+        self.validate_no_missing_values(data)
+        self.validate_finite_values(data)
+        
+        self.logger.info("Data validation passed all checks")
+        return True

@@ -2,7 +2,7 @@
 
 import json
 import time
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, List, Optional, Union, Tuple
 from pathlib import Path
 import numpy as np
 
@@ -102,7 +102,7 @@ class RequestValidator:
     """Utility class for validating API requests."""
     
     @staticmethod
-    def validate_prediction_request(data: Dict[str, Any]) -> tuple[bool, Optional[str]]:
+    def validate_prediction_request(data: Dict[str, Any]) -> Tuple[bool, Optional[str]]:
         """Validate a prediction request.
         
         Args:
@@ -137,7 +137,7 @@ class RequestValidator:
         return True, None
     
     @staticmethod
-    def validate_training_request(data: Dict[str, Any]) -> tuple[bool, Optional[str]]:
+    def validate_training_request(data: Dict[str, Any]) -> Tuple[bool, Optional[str]]:
         """Validate a training request.
         
         Args:
@@ -171,7 +171,7 @@ class RequestValidator:
         return True, None
     
     @staticmethod
-    def validate_model_request(data: Dict[str, Any]) -> tuple[bool, Optional[str]]:
+    def validate_model_request(data: Dict[str, Any]) -> Tuple[bool, Optional[str]]:
         """Validate a model management request.
         
         Args:

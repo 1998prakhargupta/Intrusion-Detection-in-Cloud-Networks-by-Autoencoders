@@ -12,7 +12,31 @@ This package contains utility modules for various system operations:
 """
 
 # Legacy imports (kept for backward compatibility)
-from .config import Config, load_config, get_env_var
+try:
+    from .config import Config, load_config, get_env_var
+except ImportError:
+    # Fallback to simple config manager for Python 3.6 compatibility
+    try:
+        from .config_manager import SimpleConfigManager as Config
+        def load_config(config_path=None, environment=None):
+            """Load configuration using the simple config manager."""
+            # config_path parameter kept for compatibility but not used
+            return Config(environment=environment)
+        def get_env_var(name, default=None):
+            """Get environment variable."""
+            import os
+            return os.getenv(name, default)
+    except ImportError:
+        # Final fallback - create dummy implementations
+        class Config:
+            pass
+        def load_config(**_kwargs):
+            """Dummy load_config function."""
+            return {}
+        def get_env_var(name, default=None):
+            """Get environment variable."""
+            import os
+            return os.getenv(name, default)
 from .logger import get_logger, setup_logging, LoggerMixin, log_function_call, log_errors
 
 # Import key classes and functions for easy access

@@ -9,7 +9,16 @@ from sklearn.model_selection import train_test_split
 import joblib
 
 from ..utils.logger import LoggerMixin
-from ..utils.config import Config
+try:
+    from ..utils.config import Config
+except ImportError:
+    # Fallback for when pydantic is not available
+    try:
+        from ..utils.config_manager import SimpleConfigManager as Config
+    except ImportError:
+        # Final fallback
+        class Config:
+            pass
 
 
 class DataProcessor(LoggerMixin):

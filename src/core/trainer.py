@@ -15,9 +15,9 @@ except ImportError:
     TORCH_AVAILABLE = False
 
 from ..utils.logger import LoggerMixin
-from ..utils.config import Config
+from ..utils.enterprise_config import ConfigurationManager
 from ..data.processor import DataProcessor
-from .autoencoder import AutoencoderModel, SimpleNumpyAutoencoder
+from ..models.autoencoder import AutoencoderModel, SimpleNumpyAutoencoder
 
 
 class EarlyStopping:
@@ -62,14 +62,15 @@ class EarlyStopping:
 class ModelTrainer(LoggerMixin):
     """Model trainer for autoencoder-based anomaly detection."""
     
-    def __init__(self, config: Optional[Config] = None):
+    def __init__(self, config_manager: Optional[ConfigurationManager] = None):
         """Initialize model trainer.
         
         Args:
-            config: Configuration object.
+            config_manager: Configuration manager instance.
         """
         super().__init__()
-        self.config = config or Config()
+        self.config_manager = config_manager or ConfigurationManager()
+        self.config = self.config_manager.config
         self.model = None
         self.optimizer = None
         self.device = None
@@ -84,7 +85,7 @@ class ModelTrainer(LoggerMixin):
     def _setup_device(self) -> None:
         """Setup compute device (CPU/GPU)."""
         if TORCH_AVAILABLE:
-            device_config = self.config.get('compute.device', 'auto')
+            device_config = self.config.training.device
             
             if device_config == 'auto':
                 self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -103,30 +104,13 @@ class ModelTrainer(LoggerMixin):
             self.logger.info("PyTorch not available. Using NumPy implementation.")
     
     def _init_model(self) -> None:
-        """Initialize the autoencoder model."""
-        if TORCH_AVAILABLE:
-            self.model = AutoencoderModel(
-                input_size=self.config.model.input_size,
-                hidden_size=self.config.model.hidden_size,
-                activation=self.config.model.activation,
-                dropout_rate=self.config.model.dropout_rate,
-                batch_norm=self.config.model.batch_norm
-            ).to(self.device)
-            
-            # Initialize optimizer
-            self.optimizer = optim.Adam(
-                self.model.parameters(),
-                lr=self.config.training.learning_rate,
-                weight_decay=self.config.training.weight_decay
-            )
-            
-            self.logger.info(f"PyTorch model initialized: {self.model.get_model_info()}")
-        else:
-            self.model = SimpleNumpyAutoencoder(
-                input_size=self.config.model.input_size,
-                hidden_size=self.config.model.hidden_size
-            )
-            self.logger.info(f"NumPy model initialized: {self.config.model.input_size} -> {self.config.model.hidden_size}")
+        """Initialize model based on configuration."""
+        from ..models.autoencoder import AutoencoderModel
+        
+        self.model = AutoencoderModel(
+            input_size=self.config.model.input_dim,
+            hidden_size=2  # Default hidden size
+        )
     
     def _create_data_loaders(self, 
                            train_data: np.ndarray, 

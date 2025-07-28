@@ -2,10 +2,35 @@
 
 import asyncio
 import time
-from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Union
 import uvicorn
+
+# Python 3.6 compatibility for asynccontextmanager
+try:
+    from contextlib import asynccontextmanager
+except ImportError:
+    # Fallback for Python 3.6
+    from contextlib import contextmanager
+    import asyncio
+    from functools import wraps
+    
+    def asynccontextmanager(func):
+        """Simple asynccontextmanager fallback for Python 3.6."""
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            generator = func(*args, **kwargs)
+            try:
+                value = await generator.__anext__()
+                yield value
+            except StopAsyncIteration:
+                pass
+            finally:
+                try:
+                    await generator.__anext__()
+                except StopAsyncIteration:
+                    pass
+        return wrapper
 
 try:
     from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks, status
@@ -17,7 +42,19 @@ except ImportError:
     FASTAPI_AVAILABLE = False
 
 from ..utils.logger import get_logger, setup_logging
-from ..utils.config import Config, load_config
+try:
+    from ..utils.config import Config, load_config
+except ImportError:
+    # Fallback for when pydantic is not available
+    try:
+        from ..utils.config_manager import SimpleConfigManager as Config
+        from ..utils import load_config
+    except ImportError:
+        # Final fallback
+        class Config:
+            pass
+        def load_config(**kwargs):
+            return {}
 from ..core.predictor import AnomalyPredictor
 
 # Setup logging
